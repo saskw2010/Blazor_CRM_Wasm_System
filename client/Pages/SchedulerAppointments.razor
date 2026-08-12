@@ -1,0 +1,48 @@
+﻿@page "/scheduler-appointments"
+@layout MainLayout
+@inherits BlazorCrmWasm.Pages.SchedulerAppointmentsComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using BlazorCrmWasm.Models.Crm
+<PageTitle>Scheduler Appointments</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Scheduler Appointments">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@Button0Click">
+        </RadzenButton>
+        <RadzenSplitButton Icon="get_app" style="margin-left: 10px; margin-bottom: 10px" Text="Export" Click="@Splitbutton0Click">
+          <ChildContent>
+            <RadzenSplitButtonItem Text="Excel" Value="xlsx">
+            </RadzenSplitButtonItem>
+            <RadzenSplitButtonItem Text="CSV" Value="csv">
+            </RadzenSplitButtonItem>
+          </ChildContent>
+        </RadzenSplitButton>
+        <RadzenTextBox Placeholder="Search ..." style="display: block; margin-bottom: 10px; width: 100%" Name="Textbox0" @oninput="@(async(args) => {search = $"{args.Value}";await grid0.GoToPage(0);await grid0.Reload();})">
+        </RadzenTextBox>
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="true" AllowSorting="true" Data="@getSchedulerAppointmentsResult" Count="@getSchedulerAppointmentsCount" TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" LoadData="@Grid0LoadData" RowDoubleClick="@Grid0RowDoubleClick">
+          <Columns>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" Property="schedulerid" Title="Schedulerid">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" Property="StartDate" FormatString="{0:dd/MM//yyyy}" Title="Start Date">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" Property="EndDate" FormatString="{0:dd/MM//yyyy}" Title="End Date">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" Property="TextDesc" Title="Text Desc">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.SchedulerAppointment" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+              <Template Context="blazorCrmWasmModelsCrmSchedulerAppointment">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@((args) =>GridDeleteButtonClick(args, blazorCrmWasmModelsCrmSchedulerAppointment))" @onclick:stopPropagation="true">
+                </RadzenButton>
+              </Template>
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>
