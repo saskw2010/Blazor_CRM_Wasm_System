@@ -1,0 +1,51 @@
+{
+  "dataSources": [
+    "CRM"
+  ],
+  "generator": "@radzen/blazor-server",
+  "https": true,
+  "layouts": [
+    "Login",
+    "Main"
+  ],
+  "logo": "",
+  "name": "BlazorCrmWasm",
+  "navigation": [
+    "Contacts",
+    "Opportunities",
+    "Opportunity Statuses",
+    "Task Statuses",
+    "Task Types",
+    "Tasklists",
+    "Scheduler Appointments"
+  ],
+  "pages": [
+    "Contacts",
+    "Add Contact",
+    "Edit Contact",
+    "Opportunities",
+    "Add Opportunity",
+    "Edit Opportunity",
+    "Opportunity Statuses",
+    "Add Opportunity Status",
+    "Edit Opportunity Status",
+    "Task Statuses",
+    "Add Task Status",
+    "Edit Task Status",
+    "Task Types",
+    "Add Task Type",
+    "Edit Task Type",
+    "Tasklists",
+    "Add Tasklist",
+    "Edit Tasklist",
+    "Scheduler Appointments",
+    "Add Scheduler Appointment",
+    "Edit Scheduler Appointment"
+  ],
+  "serverLang": "cs",
+  "serverProject": true,
+  "serverVersion": "6",
+  "startPage": "Contacts",
+  "theme": "dark",
+  "wasm": true
+}
