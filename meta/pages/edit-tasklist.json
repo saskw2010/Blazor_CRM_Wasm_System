@@ -1,0 +1,686 @@
+{
+  "components": [
+    {
+      "type": "content",
+      "container": "main",
+      "components": [
+        {
+          "components": [
+            {
+              "class": "col-md-9",
+              "components": [
+                {
+                  "name": "closeLabel",
+                  "style": {
+                    "fontWeight": "bold"
+                  },
+                  "text": "Item no longer available.",
+                  "type": "label",
+                  "visible": "${!canEdit}"
+                }
+              ],
+              "name": "col0",
+              "type": "col"
+            },
+            {
+              "class": "col-md-3",
+              "components": [
+                {
+                  "buttonStyle": "secondary",
+                  "events": {
+                    "click": [
+                      {
+                        "type": "close-popup"
+                      }
+                    ]
+                  },
+                  "icon": "",
+                  "name": "closeButton",
+                  "style": {
+                    "marginBottom": "20px"
+                  },
+                  "text": "Close",
+                  "type": "button",
+                  "visible": "${!canEdit}"
+                }
+              ],
+              "name": "col1",
+              "type": "col"
+            }
+          ],
+          "name": "row0",
+          "style": {},
+          "type": "row"
+        },
+        {
+          "components": [
+            {
+              "class": "col-md-9",
+              "components": [
+                {
+                  "name": "label0",
+                  "style": {
+                    "fontWeight": "bold"
+                  },
+                  "text": "Another user has made conflicting changes to one or more of the fields you have modified. Please reload.",
+                  "type": "label",
+                  "visible": "${hasChanges}"
+                }
+              ],
+              "name": "col0",
+              "type": "col"
+            },
+            {
+              "class": "col-md-3",
+              "components": [
+                {
+                  "buttonStyle": "secondary",
+                  "events": {
+                    "click": [
+                      {
+                        "code": "await this.Load()",
+                        "type": "execute"
+                      }
+                    ]
+                  },
+                  "icon": "autorenew",
+                  "name": "button0",
+                  "style": {
+                    "marginBottom": "20px"
+                  },
+                  "text": "Reload",
+                  "type": "button",
+                  "visible": "${hasChanges}"
+                }
+              ],
+              "name": "col1",
+              "type": "col"
+            }
+          ],
+          "name": "row0",
+          "style": {},
+          "type": "row"
+        },
+        {
+          "type": "row",
+          "components": [
+            {
+              "type": "col",
+              "class": "col-md-12",
+              "components": [
+                {
+                  "type": "template-form",
+                  "name": "form0",
+                  "components": [
+                    {
+                      "type": "row",
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "type": "label",
+                              "text": "Title",
+                              "component": "Title",
+                              "name": "TitleLabel",
+                              "style": {
+                                "width": "100%"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "col",
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "valueType": "string",
+                              "maxLength": 256,
+                              "type": "textbox",
+                              "name": "Title",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "value": "${tasklist.Title}"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "type": "label",
+                              "text": "Opportunity",
+                              "component": "OpportunityId",
+                              "name": "OpportunityIdLabel",
+                              "style": {
+                                "width": "100%"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "col",
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "data": "${getOpportunitiesForOpportunityIdResult}",
+                              "textProperty": "UserId",
+                              "valueProperty": "Id",
+                              "placeholder": "Choose Opportunity",
+                              "valueType": "int",
+                              "showSearch": false,
+                              "count": "${getOpportunitiesForOpportunityIdCount}",
+                              "value": "${tasklist.OpportunityId}",
+                              "type": "dropdown-datagrid",
+                              "name": "OpportunityId",
+                              "style": {
+                                "display": "block",
+                                "width": "100%"
+                              },
+                              "selectedValue": "${getByOpportunitiesForOpportunityIdResult}",
+                              "events": {
+                                "loadData": [
+                                  {
+                                    "name": "CRM.getOpportunities",
+                                    "parameters": [
+                                      {
+                                        "name": "$top",
+                                        "value": "${event.top}"
+                                      },
+                                      {
+                                        "name": "$skip",
+                                        "value": "${event.skip}"
+                                      },
+                                      {
+                                        "name": "$orderby",
+                                        "value": "${event.orderby}"
+                                      },
+                                      {
+                                        "name": "$filter",
+                                        "value": "contains(UserId, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : \"\")}')"
+                                      },
+                                      {
+                                        "name": "$count",
+                                        "value": "true"
+                                      }
+                                    ],
+                                    "then": [
+                                      {
+                                        "name": "getOpportunitiesForOpportunityIdResult",
+                                        "type": "set",
+                                        "value": "${result.Value.AsODataEnumerable()}",
+                                        "valueType": "IEnumerable<BlazorCrmWasm.Models.Crm.Opportunity>"
+                                      },
+                                      {
+                                        "name": "getOpportunitiesForOpportunityIdCount",
+                                        "type": "set",
+                                        "value": "result.Count"
+                                      }
+                                    ],
+                                    "type": "invoke"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "required-validator",
+                              "name": "OpportunityIdRequiredValidator",
+                              "component": "OpportunityId",
+                              "text": "OpportunityId is required",
+                              "style": {
+                                "position": "absolute"
+                              },
+                              "defaultValue": "0"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "type": "label",
+                              "text": "Due Date",
+                              "component": "DueDate",
+                              "name": "DueDateLabel",
+                              "style": {
+                                "width": "100%"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "col",
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "valueType": "DateTime",
+                              "dateFormat": "dd/MM//yyyy",
+                              "type": "datepicker",
+                              "name": "DueDate",
+                              "style": {
+                                "display": "block",
+                                "width": "100%"
+                              },
+                              "value": "${tasklist.DueDate}"
+                            },
+                            {
+                              "type": "required-validator",
+                              "name": "DueDateRequiredValidator",
+                              "component": "DueDate",
+                              "text": "DueDate is required",
+                              "style": {
+                                "position": "absolute"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "type": "label",
+                              "text": "Task Type",
+                              "component": "TypeId",
+                              "name": "TypeIdLabel",
+                              "style": {
+                                "width": "100%"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "col",
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "data": "${getTaskTypesForTypeIdResult}",
+                              "textProperty": "Name",
+                              "valueProperty": "Id",
+                              "placeholder": "Choose TaskType",
+                              "valueType": "int",
+                              "showSearch": false,
+                              "count": "${getTaskTypesForTypeIdCount}",
+                              "value": "${tasklist.TypeId}",
+                              "type": "dropdown-datagrid",
+                              "name": "TypeId",
+                              "style": {
+                                "display": "block",
+                                "width": "100%"
+                              },
+                              "selectedValue": "${getByTaskTypesForTypeIdResult}",
+                              "events": {
+                                "loadData": [
+                                  {
+                                    "name": "CRM.getTaskTypes",
+                                    "parameters": [
+                                      {
+                                        "name": "$top",
+                                        "value": "${event.top}"
+                                      },
+                                      {
+                                        "name": "$skip",
+                                        "value": "${event.skip}"
+                                      },
+                                      {
+                                        "name": "$orderby",
+                                        "value": "${event.orderby}"
+                                      },
+                                      {
+                                        "name": "$filter",
+                                        "value": "contains(Name, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : \"\")}')"
+                                      },
+                                      {
+                                        "name": "$count",
+                                        "value": "true"
+                                      }
+                                    ],
+                                    "then": [
+                                      {
+                                        "name": "getTaskTypesForTypeIdResult",
+                                        "type": "set",
+                                        "value": "${result.Value.AsODataEnumerable()}",
+                                        "valueType": "IEnumerable<BlazorCrmWasm.Models.Crm.TaskType>"
+                                      },
+                                      {
+                                        "name": "getTaskTypesForTypeIdCount",
+                                        "type": "set",
+                                        "value": "result.Count"
+                                      }
+                                    ],
+                                    "type": "invoke"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "type": "required-validator",
+                              "name": "TypeIdRequiredValidator",
+                              "component": "TypeId",
+                              "text": "TypeId is required",
+                              "style": {
+                                "position": "absolute"
+                              },
+                              "defaultValue": "0"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "style": {
+                        "marginBottom": "1rem"
+                      },
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col-md-3",
+                          "components": [
+                            {
+                              "type": "label",
+                              "text": "Task Status",
+                              "component": "StatusId",
+                              "name": "StatusIdLabel",
+                              "style": {
+                                "width": "100%"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "type": "col",
+                          "class": "col-md-9",
+                          "components": [
+                            {
+                              "data": "${getTaskStatusesForStatusIdResult}",
+                              "textProperty": "Name",
+                              "valueProperty": "Id",
+                              "placeholder": "Choose TaskStatus",
+                              "valueType": "int?",
+                              "showSearch": false,
+                              "count": "${getTaskStatusesForStatusIdCount}",
+                              "value": "${tasklist.StatusId}",
+                              "type": "dropdown-datagrid",
+                              "name": "StatusId",
+                              "style": {
+                                "width": "100%"
+                              },
+                              "selectedValue": "${getByTaskStatusesForStatusIdResult}",
+                              "events": {
+                                "loadData": [
+                                  {
+                                    "name": "CRM.getTaskStatuses",
+                                    "parameters": [
+                                      {
+                                        "name": "$top",
+                                        "value": "${event.top}"
+                                      },
+                                      {
+                                        "name": "$skip",
+                                        "value": "${event.skip}"
+                                      },
+                                      {
+                                        "name": "$orderby",
+                                        "value": "${event.orderby}"
+                                      },
+                                      {
+                                        "name": "$filter",
+                                        "value": "contains(Name, '{(!string.IsNullOrEmpty(args.Filter) ? args.Filter : \"\")}')"
+                                      },
+                                      {
+                                        "name": "$count",
+                                        "value": "true"
+                                      }
+                                    ],
+                                    "then": [
+                                      {
+                                        "name": "getTaskStatusesForStatusIdResult",
+                                        "type": "set",
+                                        "value": "${result.Value.AsODataEnumerable()}",
+                                        "valueType": "IEnumerable<BlazorCrmWasm.Models.Crm.TaskStatus>"
+                                      },
+                                      {
+                                        "name": "getTaskStatusesForStatusIdCount",
+                                        "type": "set",
+                                        "value": "result.Count"
+                                      }
+                                    ],
+                                    "type": "invoke"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "row",
+                      "components": [
+                        {
+                          "type": "col",
+                          "class": "col offset-sm-3",
+                          "components": [
+                            {
+                              "type": "button",
+                              "buttonType": "submit",
+                              "icon": "save",
+                              "text": "Save",
+                              "buttonStyle": "primary"
+                            },
+                            {
+                              "type": "button",
+                              "buttonStyle": "light",
+                              "style": {
+                                "marginLeft": "1rem"
+                              },
+                              "text": "Cancel",
+                              "events": {
+                                "click": [
+                                  {
+                                    "type": "close-popup"
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "events": {
+                    "submit": [
+                      {
+                        "error": [
+                          {
+                            "detail": "Unable to update Tasklist",
+                            "severity": "error",
+                            "summary": "Error",
+                            "type": "notify"
+                          },
+                          {
+                            "name": "hasChanges",
+                            "type": "set",
+                            "value": "result.Message.Contains(\"412\")",
+                            "valueType": "bool"
+                          },
+                          {
+                            "name": "canEdit",
+                            "type": "set",
+                            "condition": "!result.Message.Contains(\"412\")",
+                            "value": "false",
+                            "valueType": "bool"
+                          }
+                        ],
+                        "name": "CRM.updateTasklist",
+                        "parameters": [
+                          {
+                            "name": "Id",
+                            "value": "${parameters.Id}"
+                          },
+                          {
+                            "name": "Tasklist",
+                            "value": "${tasklist}"
+                          }
+                        ],
+                        "then": [
+                          {
+                            "type": "close-popup",
+                            "result": "${tasklist}",
+                            "condition": "result.StatusCode != System.Net.HttpStatusCode.PreconditionFailed"
+                          },
+                          {
+                            "name": "hasChanges",
+                            "type": "set",
+                            "value": "result.StatusCode == System.Net.HttpStatusCode.PreconditionFailed",
+                            "valueType": "bool"
+                          }
+                        ],
+                        "type": "invoke"
+                      }
+                    ]
+                  },
+                  "itemType": "BlazorCrmWasm.Models.Crm.Tasklist",
+                  "data": "${tasklist}",
+                  "visible": "${tasklist != null && canEdit}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": {
+    "load": [
+      {
+        "name": "hasChanges",
+        "type": "set",
+        "value": "false",
+        "valueType": "bool"
+      },
+      {
+        "name": "canEdit",
+        "type": "set",
+        "value": "true",
+        "valueType": "bool"
+      },
+      {
+        "name": "CRM.getTasklistById",
+        "parameters": [
+          {
+            "name": "Id",
+            "value": "${parameters.Id}"
+          }
+        ],
+        "then": [
+          {
+            "name": "tasklist",
+            "type": "set",
+            "value": "${result}",
+            "valueType": "BlazorCrmWasm.Models.Crm.Tasklist"
+          },
+          {
+            "name": "canEdit",
+            "type": "set",
+            "value": "result != null",
+            "valueType": "bool"
+          },
+          {
+            "name": "CRM.getOpportunityById",
+            "parameters": [
+              {
+                "name": "Id",
+                "value": "${this.tasklist.OpportunityId}"
+              }
+            ],
+            "then": [
+              {
+                "name": "getByOpportunitiesForOpportunityIdResult",
+                "type": "set",
+                "value": "${result}",
+                "valueType": "BlazorCrmWasm.Models.Crm.Opportunity"
+              }
+            ],
+            "condition": "this.tasklist.OpportunityId != null",
+            "type": "invoke"
+          },
+          {
+            "name": "CRM.getTaskTypeById",
+            "parameters": [
+              {
+                "name": "Id",
+                "value": "${this.tasklist.TypeId}"
+              }
+            ],
+            "then": [
+              {
+                "name": "getByTaskTypesForTypeIdResult",
+                "type": "set",
+                "value": "${result}",
+                "valueType": "BlazorCrmWasm.Models.Crm.TaskType"
+              }
+            ],
+            "condition": "this.tasklist.TypeId != null",
+            "type": "invoke"
+          },
+          {
+            "name": "CRM.getTaskStatusById",
+            "parameters": [
+              {
+                "name": "Id",
+                "value": "${this.tasklist.StatusId}"
+              }
+            ],
+            "then": [
+              {
+                "name": "getByTaskStatusesForStatusIdResult",
+                "type": "set",
+                "value": "${result}",
+                "valueType": "BlazorCrmWasm.Models.Crm.TaskStatus"
+              }
+            ],
+            "condition": "this.tasklist.StatusId != null",
+            "type": "invoke"
+          }
+        ],
+        "error": [],
+        "type": "invoke"
+      }
+    ]
+  },
+  "name": "Edit Tasklist",
+  "layout": "Main"
+}
