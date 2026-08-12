@@ -1,0 +1,369 @@
+{
+  "components": [
+    {
+      "type": "content",
+      "container": "main",
+      "components": [
+        {
+          "type": "heading",
+          "name": "pageTitle",
+          "size": "H1",
+          "text": "Opportunities"
+        },
+        {
+          "type": "row",
+          "components": [
+            {
+              "type": "col",
+              "class": "col-md-12",
+              "components": [
+                {
+                  "icon": "add_circle_outline",
+                  "name": "button0",
+                  "style": {
+                    "marginBottom": "10px"
+                  },
+                  "text": "Add",
+                  "type": "button",
+                  "events": {
+                    "click": [
+                      {
+                        "path": "add-opportunity",
+                        "type": "popup",
+                        "then": [
+                          {
+                            "code": "await grid0.Reload();",
+                            "type": "execute"
+                          },
+                          {
+                            "code": "await InvokeAsync(() => { StateHasChanged(); });",
+                            "type": "execute"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                {
+                  "events": {
+                    "click": [
+                      {
+                        "condition": "${event?.Value == \"csv\"}",
+                        "fileName": "Opportunities",
+                        "name": "CRM.getOpportunities",
+                        "parameters": [
+                          {
+                            "name": "$filter",
+                            "value": "${(string.IsNullOrEmpty(grid0.Query.Filter)? \"true\" : grid0.Query.Filter)}"
+                          },
+                          {
+                            "name": "$orderby",
+                            "value": "${grid0.Query.OrderBy}"
+                          },
+                          {
+                            "name": "$expand",
+                            "value": "Contact,OpportunityStatus"
+                          },
+                          {
+                            "name": "$select",
+                            "value": "Id,Amount,UserId,Contact.Email as ContactEmail,OpportunityStatus.Name as OpportunityStatusName,CloseDate,Name"
+                          }
+                        ],
+                        "type": "export"
+                      },
+                      {
+                        "condition": "${event == null || event.Value == \"xlsx\"}",
+                        "fileName": "Opportunities",
+                        "format": "xlsx",
+                        "name": "CRM.getOpportunities",
+                        "parameters": [
+                          {
+                            "name": "$filter",
+                            "value": "${(string.IsNullOrEmpty(grid0.Query.Filter)? \"true\" : grid0.Query.Filter)}"
+                          },
+                          {
+                            "name": "$orderby",
+                            "value": "${grid0.Query.OrderBy}"
+                          },
+                          {
+                            "name": "$expand",
+                            "value": "Contact,OpportunityStatus"
+                          },
+                          {
+                            "name": "$select",
+                            "value": "Id,Amount,UserId,Contact.Email as ContactEmail,OpportunityStatus.Name as OpportunityStatusName,CloseDate,Name"
+                          }
+                        ],
+                        "type": "export"
+                      }
+                    ]
+                  },
+                  "icon": "get_app",
+                  "items": [
+                    {
+                      "icon": "",
+                      "text": "Excel",
+                      "value": "xlsx"
+                    },
+                    {
+                      "icon": "",
+                      "text": "CSV",
+                      "value": "csv"
+                    }
+                  ],
+                  "name": "splitbutton0",
+                  "style": {
+                    "marginLeft": "10px",
+                    "marginBottom": "10px"
+                  },
+                  "text": "Export",
+                  "type": "splitbutton"
+                },
+                {
+                  "attributes": [
+                    {
+                      "name": "@oninput",
+                      "value": "@(async(args) => {search = $\"{args.Value}\";await grid0.GoToPage(0);await grid0.Reload();})"
+                    }
+                  ],
+                  "name": "textbox0",
+                  "placeholder": "Search ...",
+                  "style": {
+                    "display": "block",
+                    "marginBottom": "10px",
+                    "width": "100%"
+                  },
+                  "type": "textbox",
+                  "value": ""
+                },
+                {
+                  "name": "grid0",
+                  "allowFiltering": true,
+                  "filterMode": "advanced",
+                  "allowPaging": true,
+                  "allowSorting": true,
+                  "data": "${getOpportunitiesResult}",
+                  "events": {
+                    "loadData": [
+                      {
+                        "name": "CRM.getOpportunities",
+                        "parameters": [
+                          {
+                            "name": "$top",
+                            "value": "event.top"
+                          },
+                          {
+                            "name": "$skip",
+                            "value": "event.skip"
+                          },
+                          {
+                            "name": "$count",
+                            "value": "event.top != null && event.skip != null"
+                          },
+                          {
+                            "name": "$filter",
+                            "value": [
+                              {
+                                "filters": [
+                                  {
+                                    "operation": "contains",
+                                    "property": "UserId",
+                                    "type": "string",
+                                    "value": "\"${search}\""
+                                  },
+                                  {
+                                    "operation": "contains",
+                                    "property": "Name",
+                                    "type": "string",
+                                    "value": "\"${search}\""
+                                  }
+                                ],
+                                "operator": "or"
+                              },
+                              {
+                                "value": "${(string.IsNullOrEmpty(event.filter)? \"true\" : event.filter)}"
+                              }
+                            ],
+                            "operator": "and"
+                          },
+                          {
+                            "name": "$orderby",
+                            "value": "${event.orderby}"
+                          },
+                          {
+                            "name": "$expand",
+                            "value": "Contact,OpportunityStatus"
+                          }
+                        ],
+                        "then": [
+                          {
+                            "name": "getOpportunitiesResult",
+                            "type": "set",
+                            "value": "${result.Value.AsODataEnumerable()}",
+                            "valueType": "IEnumerable<BlazorCrmWasm.Models.Crm.Opportunity>"
+                          },
+                          {
+                            "name": "getOpportunitiesCount",
+                            "type": "set",
+                            "value": "${result.Count}",
+                            "valueType": "int"
+                          }
+                        ],
+                        "type": "invoke",
+                        "error": [
+                          {
+                            "detail": "Unable to load Opportunities",
+                            "severity": "error",
+                            "summary": "Error",
+                            "type": "notify"
+                          }
+                        ]
+                      }
+                    ],
+                    "rowDoubleClick": [
+                      {
+                        "parameters": [
+                          {
+                            "name": "Id",
+                            "value": "${event.Data.Id}"
+                          }
+                        ],
+                        "path": "edit-opportunity",
+                        "type": "popup",
+                        "then": [
+                          {
+                            "code": "await grid0.Reload();",
+                            "type": "execute"
+                          },
+                          {
+                            "code": "await InvokeAsync(() => { StateHasChanged(); });",
+                            "type": "execute"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "title": "",
+                  "columns": [
+                    {
+                      "property": "Id",
+                      "title": "Id"
+                    },
+                    {
+                      "property": "Amount",
+                      "title": "Amount"
+                    },
+                    {
+                      "property": "UserId",
+                      "title": "User Id"
+                    },
+                    {
+                      "property": "ContactId",
+                      "sortProperty": "Contact.Email",
+                      "groupProperty": "Contact.Email",
+                      "filterProperty": "Contact.Email",
+                      "template": "${data.Contact?.Email}",
+                      "title": "Contact"
+                    },
+                    {
+                      "property": "StatusId",
+                      "sortProperty": "OpportunityStatus.Name",
+                      "groupProperty": "OpportunityStatus.Name",
+                      "filterProperty": "OpportunityStatus.Name",
+                      "template": "${data.OpportunityStatus?.Name}",
+                      "title": "Opportunity Status"
+                    },
+                    {
+                      "property": "CloseDate",
+                      "formatString": "{0:dd/MM//yyyy}",
+                      "title": "Close Date"
+                    },
+                    {
+                      "property": "Name",
+                      "title": "Name"
+                    },
+                    {
+                      "filterable": false,
+                      "sortable": false,
+                      "width": "70px",
+                      "textAlign": "center",
+                      "template": [
+                        {
+                          "attributes": [
+                            {
+                              "name": "@onclick:stopPropagation",
+                              "value": true
+                            }
+                          ],
+                          "buttonStyle": "danger",
+                          "icon": "close",
+                          "name": "gridDeleteButton",
+                          "text": "",
+                          "size": "sm",
+                          "type": "button",
+                          "events": {
+                            "click": [
+                              {
+                                "condition": "await DialogService.Confirm(\"Are you sure you want to delete this record?\") == true",
+                                "error": [
+                                  {
+                                    "detail": "Unable to delete Opportunity",
+                                    "severity": "error",
+                                    "summary": "Error",
+                                    "type": "notify"
+                                  }
+                                ],
+                                "name": "CRM.deleteOpportunity",
+                                "parameters": [
+                                  {
+                                    "name": "Id",
+                                    "value": "${data.Id}"
+                                  }
+                                ],
+                                "then": [
+                                  {
+                                    "code": "await grid0.Reload();",
+                                    "condition": "result != null && result.StatusCode == System.Net.HttpStatusCode.NoContent",
+                                    "type": "execute"
+                                  },
+                                  {
+                                    "condition": "result != null && result.StatusCode != System.Net.HttpStatusCode.NoContent",
+                                    "detail": "Unable to delete Opportunity",
+                                    "severity": "error",
+                                    "summary": "Error",
+                                    "type": "notify"
+                                  }
+                                ],
+                                "type": "invoke"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  ],
+                  "type": "datagrid",
+                  "count": "${getOpportunitiesCount}",
+                  "itemType": "BlazorCrmWasm.Models.Crm.Opportunity"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "events": {
+    "load": [
+      {
+        "condition": "string.IsNullOrEmpty(search)",
+        "name": "search",
+        "type": "set",
+        "value": "\"\"",
+        "valueType": "string"
+      }
+    ]
+  },
+  "name": "Opportunities",
+  "layout": "Main"
+}
