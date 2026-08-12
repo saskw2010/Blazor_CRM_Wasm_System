@@ -1,0 +1,67 @@
+﻿@inherits BlazorCrmWasm.Layouts.MainLayoutComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using BlazorCrmWasm.Models.Crm
+@using BlazorCrmWasm.Pages
+<RadzenDialog />
+<RadzenNotification />
+<RadzenTooltip />
+<RadzenContextMenu />
+
+<RadzenLayout>
+  <ChildContent>
+    <RadzenHeader>
+      <ChildContent>
+        <div class="row justify-content-start align-items-center">
+          <div class="col-6 d-flex align-items-center">
+            <RadzenSidebarToggle Click="@SidebarToggle0Click">
+            </RadzenSidebarToggle>
+            <RadzenLabel Text="BlazorCrmWasm">
+            </RadzenLabel>
+          </div>
+          <div class="col-6 text-right">
+          </div>
+        </div>
+      </ChildContent>
+    </RadzenHeader>
+        <RadzenSidebar @ref="sidebar0">
+            <ChildContent>
+                <RadzenPanelMenu style="height: 100%">
+                    <ChildContent>
+                        <RadzenPanelMenuItem Text="Contacts" Path="contacts">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Opportunities" Path="opportunities">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Opportunity Statuses" Path="opportunity-statuses">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Task Statuses" Path="task-statuses">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Task Types" Path="task-types">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Tasklists" Path="tasklists">
+                        </RadzenPanelMenuItem>
+                        <RadzenPanelMenuItem Text="Scheduler Appointments" Path="scheduler-appointments">
+                        </RadzenPanelMenuItem>
+                    </ChildContent>
+                </RadzenPanelMenu>
+            </ChildContent>
+        </RadzenSidebar>
+    
+    
+    <RadzenBody @ref="body0">
+      <ChildContent>
+        <RadzenContentContainer Name="main">
+        @Body
+        </RadzenContentContainer>
+      </ChildContent>
+    </RadzenBody>
+   
+    <RadzenFooter>
+      <ChildContent>
+        <RadzenLabel Text="BlazorCrmWasm, Copyright Ⓒ 2022">
+        </RadzenLabel>
+      </ChildContent>
+    </RadzenFooter>
+  </ChildContent>
+</RadzenLayout>
