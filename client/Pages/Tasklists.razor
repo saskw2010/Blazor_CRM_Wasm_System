@@ -1,0 +1,61 @@
+﻿@page "/tasklists"
+@layout MainLayout
+@inherits BlazorCrmWasm.Pages.TasklistsComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using BlazorCrmWasm.Models.Crm
+<PageTitle>Tasklists</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Tasklists">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@Button0Click">
+        </RadzenButton>
+        <RadzenSplitButton Icon="get_app" style="margin-left: 10px; margin-bottom: 10px" Text="Export" Click="@Splitbutton0Click">
+          <ChildContent>
+            <RadzenSplitButtonItem Text="Excel" Value="xlsx">
+            </RadzenSplitButtonItem>
+            <RadzenSplitButtonItem Text="CSV" Value="csv">
+            </RadzenSplitButtonItem>
+          </ChildContent>
+        </RadzenSplitButton>
+        <RadzenTextBox Placeholder="Search ..." style="display: block; margin-bottom: 10px; width: 100%" Name="Textbox0" @oninput="@(async(args) => {search = $"{args.Value}";await grid0.GoToPage(0);await grid0.Reload();})">
+        </RadzenTextBox>
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="true" AllowSorting="true" Data="@getTasklistsResult" Count="@getTasklistsCount" TItem="BlazorCrmWasm.Models.Crm.Tasklist" LoadData="@Grid0LoadData" RowDoubleClick="@Grid0RowDoubleClick">
+          <Columns>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="Id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="Title" Title="Title">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="OpportunityId" SortProperty="Opportunity.UserId" GroupProperty="Opportunity.UserId" FilterProperty="Opportunity.UserId" Title="Opportunity">
+              <Template Context="data">
+              @(data.Opportunity?.UserId)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="DueDate" FormatString="{0:dd/MM//yyyy}" Title="Due Date">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="TypeId" SortProperty="TaskType.Name" GroupProperty="TaskType.Name" FilterProperty="TaskType.Name" Title="Task Type">
+              <Template Context="data">
+              @(data.TaskType?.Name)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Property="StatusId" SortProperty="TaskStatus.Name" GroupProperty="TaskStatus.Name" FilterProperty="TaskStatus.Name" Title="Task Status">
+              <Template Context="data">
+              @(data.TaskStatus?.Name)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Tasklist" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+              <Template Context="blazorCrmWasmModelsCrmTasklist">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@((args) =>GridDeleteButtonClick(args, blazorCrmWasmModelsCrmTasklist))" @onclick:stopPropagation="true">
+                </RadzenButton>
+              </Template>
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>
