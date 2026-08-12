@@ -1,0 +1,60 @@
+﻿@page "/opportunities"
+@layout MainLayout
+@inherits BlazorCrmWasm.Pages.OpportunitiesComponent
+
+@using Radzen
+@using Radzen.Blazor
+@using BlazorCrmWasm.Models.Crm
+<PageTitle>Opportunities</PageTitle>
+<RadzenContent Container="main">
+  <ChildContent>
+    <RadzenHeading Size="H1" Text="Opportunities">
+    </RadzenHeading>
+    <div class="row">
+      <div class="col-md-12">
+        <RadzenButton Icon="add_circle_outline" style="margin-bottom: 10px" Text="Add" Click="@Button0Click">
+        </RadzenButton>
+        <RadzenSplitButton Icon="get_app" style="margin-left: 10px; margin-bottom: 10px" Text="Export" Click="@Splitbutton0Click">
+          <ChildContent>
+            <RadzenSplitButtonItem Text="Excel" Value="xlsx">
+            </RadzenSplitButtonItem>
+            <RadzenSplitButtonItem Text="CSV" Value="csv">
+            </RadzenSplitButtonItem>
+          </ChildContent>
+        </RadzenSplitButton>
+        <RadzenTextBox Placeholder="Search ..." style="display: block; margin-bottom: 10px; width: 100%" Name="Textbox0" @oninput="@(async(args) => {search = $"{args.Value}";await grid0.GoToPage(0);await grid0.Reload();})">
+        </RadzenTextBox>
+        <RadzenDataGrid @ref="grid0" AllowFiltering="true" FilterMode="Radzen.FilterMode.Advanced" AllowPaging="true" AllowSorting="true" Data="@getOpportunitiesResult" Count="@getOpportunitiesCount" TItem="BlazorCrmWasm.Models.Crm.Opportunity" LoadData="@Grid0LoadData" RowDoubleClick="@Grid0RowDoubleClick">
+          <Columns>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="Id" Title="Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="Amount" Title="Amount">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="UserId" Title="User Id">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="ContactId" SortProperty="Contact.Email" GroupProperty="Contact.Email" FilterProperty="Contact.Email" Title="Contact">
+              <Template Context="data">
+              @(data.Contact?.Email)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="StatusId" SortProperty="OpportunityStatus.Name" GroupProperty="OpportunityStatus.Name" FilterProperty="OpportunityStatus.Name" Title="Opportunity Status">
+              <Template Context="data">
+              @(data.OpportunityStatus?.Name)
+              </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="CloseDate" FormatString="{0:dd/MM//yyyy}" Title="Close Date">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Property="Name" Title="Name">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn TItem="BlazorCrmWasm.Models.Crm.Opportunity" Filterable="false" Sortable="false" Width="70px" TextAlign="TextAlign.Center">
+              <Template Context="blazorCrmWasmModelsCrmOpportunity">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@((args) =>GridDeleteButtonClick(args, blazorCrmWasmModelsCrmOpportunity))" @onclick:stopPropagation="true">
+                </RadzenButton>
+              </Template>
+            </RadzenDataGridColumn>
+          </Columns>
+        </RadzenDataGrid>
+      </div>
+    </div>
+  </ChildContent>
+</RadzenContent>
